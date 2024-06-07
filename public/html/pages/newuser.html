@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>velkomen til levegg</h1>
+    <div id="user"></div> 
+    <form action="/roleupdate" method="post">
+        <p>by update role you are apart of the scool</p>
+        <button type="submit">Update Role</button>
+    </form>
+    <br>
+    <form action="/deleteuser" method="post">
+        <button type="submit">Delete User</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = new URLSearchParams(window.location.search).get('userid');
+            fetch(`/api/curentuser`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById('user').innerHTML = `
+                        <p>Username: ${user.username}</p>
+                        <p>First Name: ${user.first_name}</p>
+                        <p>Last Name: ${user.last_name}</p>
+                        <p>Email: ${user.email}</p>
+                        <p>Phone: ${user.phone}</p>
+                        <p>Address: ${user.adresse}</p>
+                    `;
+                })
+                .catch(error => console.error('Error fetching user info:', error));
+        });
+    </script>
+</body>
+</html>

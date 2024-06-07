@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+</head>
+<body>
+    <header>
+        <h1>Edit User Information</h1>
+    </header>
+    <main>
+        <form id="edit-user-form" action="/edit-user" method="post">
+            <input type="hidden" id="userid" name="userid">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="first_name">First Name:</label><br>
+            <input type="text" id="first_name" name="first_name" required><br>
+            <label for="last_name">Last Name:</label><br>
+            <input type="text" id="last_name" name="last_name" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            <label for="phone">Phone:</label><br>
+            <input type="text" id="phone" name="phone" required><br>
+            <label for="adresse">Address:</label><br>
+            <input type="text" id="adresse" name="adresse" required><br><br>
+            <label for="role"></label>
+            <select id="role_id" name="role">
+                <option value="2">User</option>
+                <option value="1">Admin</option>
+            </select><br><br>
+            <button type="submit">Update User</button>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = new URLSearchParams(window.location.search).get('userid');
+            fetch(`/api/user/${userId}`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById('userid').value = user.userid;
+                    document.getElementById('username').value = user.username;
+                    document.getElementById('first_name').value = user.first_name;
+                    document.getElementById('last_name').value = user.last_name;
+                    document.getElementById('email').value = user.email;
+                    document.getElementById('phone').value = user.phone;
+                    document.getElementById('adresse').value = user.adresse;
+                    document.getElementById('role_id').value = user.role;
+                })
+                .catch(error => console.error('Error fetching user info:', error));
+        });
+    </script>
+</body>
+</html>

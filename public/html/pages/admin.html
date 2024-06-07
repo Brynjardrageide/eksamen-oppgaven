@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <a href="/logout">logout</a>
+    </header>
+    <main>
+        <section>
+            <h2>User Registrations</h2>
+            <table id="user-registrations">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User registrations will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    const tbody = document.getElementById('user-registrations').querySelector('tbody');
+                    users.forEach(user => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.first_name}</td>
+                            <td>${user.last_name}</td>
+                            <td>${user.phone}</td>
+                            <td>${user.adresse}</td>
+                            <td><a href="/edit-user?userid=${user.userid}">Edit</a></td>
+                            <td><button onclick="deleteUser(${user.userid})">Delete</button></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Error fetching users:', error));
+        });
+
+        function deleteUser(userid) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                fetch(`/api/user/${userid}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete user.');
+                    }
+                })
+                .catch(error => console.error('Error deleting user:', error));
+            }
+        }
+    </script>
+</body>
+</html>
